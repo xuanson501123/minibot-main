@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <meta name="theme-color" content="#07080d" />
+    <title>UDID Manager</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+
+    <div id="aurora"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="user-card">
+            <div class="avatar" id="avatar">?</div>
+            <div class="user-meta">
+                <div class="user-name" id="userName">Đang tải...</div>
+                <div class="user-id" id="userId">—</div>
+            </div>
+            <div class="role-pill" id="rolePill">—</div>
+        </div>
+
+        <div class="stats-strip">
+            <div class="stat-chip"><span class="sv" id="stBalance">—</span><span class="sl">Số dư</span></div>
+            <div class="stat-chip"><span class="sv" id="stCanVip1">—</span><span class="sl">Vip1 còn</span></div>
+            <div class="stat-chip"><span class="sv" id="stCanVip2">—</span><span class="sl">Vip2 còn</span></div>
+        </div>
+    </header>
+
+    <!-- BOTTOM TABS -->
+    <nav class="tabs" id="tabsBar">
+        <button class="tab active" data-tab="home">
+            <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none">
+                    <path d="M3 12l9-9 9 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M5 10v9a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="1.7"
+                        stroke-linejoin="round" />
+                </svg></span>
+            <label>Trang chủ</label>
+        </button>
+        <button class="tab" data-tab="approve">
+            <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none">
+                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6" />
+                </svg></span>
+            <label>Duyệt</label>
+        </button>
+        <button class="tab" data-tab="more">
+            <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                    <circle cx="19" cy="12" r="1.5" fill="currentColor" />
+                </svg></span>
+            <label>Khác</label>
+        </button>
+        <button class="tab admin-only" data-tab="admin" hidden>
+            <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8 1 5.4L12 14.4l-4.9 2.5 1-5.4L4.2 7.7l5.4-.8L12 2z"
+                        stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                </svg></span>
+            <label>Admin</label>
+        </button>
+    </nav>
+
+    <main>
+
+        <!-- ══ HOME ══ -->
+        <section class="page active" id="page-home">
+            <div class="page-head">
+                <h2>Xin chào 👋</h2>
+                <button class="btn-icon" id="refreshBtn" title="Làm mới">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12a7 7 0 1 0 2-4.9" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" />
+                        <path d="M5 5v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Balance card -->
+            <div class="info-card" id="balCard">
+                <div class="ic-icon" style="background:linear-gradient(135deg,#3fbf96,#5b93d4)">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+                        <path
+                            d="M12 7v1.5M12 15.5V17M9 10.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2.5-3 2.5-3 1.1-3 2.5S10.7 17.5 12 17.5s3-1.1 3-2.5"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div class="ic-body">
+                    <p class="ic-label">Số dư tài khoản</p>
+                    <p class="ic-val" id="balCardVal">—</p>
+                </div>
+                <button class="btn-sm" id="napBtn">💳 Nạp</button>
+            </div>
+
+            <!-- Price info -->
+            <div class="info-card">
+                <div class="ic-icon" style="background:linear-gradient(135deg,#c9a14a,#e87a9c)">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M6 16.5 8.2 7l3.8 3.2L15.8 7 18 16.5H6z" stroke="currentColor" stroke-width="1.6"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="ic-body">
+                    <p class="ic-label">Giá duyệt hôm nay</p>
+                    <p class="ic-val" id="priceVal">Vip1: — · Vip2: —</p>
+                </div>
+            </div>
+
+            <!-- Quick action buttons -->
+            <div class="quick-grid">
+                <button class="quick-btn" data-go="approve" data-focus="vip1">
+                    <span class="qb-ico" style="background:linear-gradient(135deg,#3fbf96,#5b93d4)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6" />
+                        </svg>
+                    </span>
+                    <span>Duyệt Vip1</span>
+                </button>
+                <button class="quick-btn" data-go="approve" data-focus="vip2">
+                    <span class="qb-ico" style="background:linear-gradient(135deg,#c9a14a,#e87a9c)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8 1 5.4L12 14.4l-4.9 2.5 1-5.4L4.2 7.7l5.4-.8L12 2z"
+                                stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <span>Duyệt Vip2</span>
+                </button>
+                <button class="quick-btn" data-go="approve" data-focus="delete">
+                    <span class="qb-ico" style="background:linear-gradient(135deg,#e85a78,#a67ae0)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <span>Xóa UDID</span>
+                </button>
+                <button class="quick-btn" data-go="approve" data-focus="replace">
+                    <span class="qb-ico" style="background:linear-gradient(135deg,#7b93e8,#a67ae0)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12a7 7 0 1 0 2-4.9" stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" />
+                            <path d="M5 5v5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <span>Replace</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ══ DUYỆT ══ -->
+        <section class="page" id="page-approve">
+            <div class="page-head">
+                <h2>Duyệt UDID</h2>
+            </div>
+
+            <div class="form-card">
+                <label class="form-label">UDID / UUID khách hàng</label>
+                <div class="input-row">
+                    <input id="udidInput" type="text" placeholder="00008020-000D2D081A92002E" autocomplete="off"
+                        autocorrect="off" autocapitalize="none" spellcheck="false" />
+                    <button class="btn-icon" id="pasteBtn" title="Dán">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="8" y="4" width="13" height="17" rx="2" stroke="currentColor" stroke-width="1.6" />
+                            <path d="M5 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" stroke="currentColor"
+                                stroke-width="1.6" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Nút duyệt chính -->
+                <div class="btn-group" id="approveActions">
+                    <button class="btn-approve vip1" id="btnVip1">👤 Duyệt Vip1</button>
+                    <button class="btn-approve vip2" id="btnVip2">🔥 Duyệt Vip2</button>
+                </div>
+
+                <!-- Nút phụ -->
+                <div class="btn-group-sm">
+                    <button class="btn-sm-outline" id="btnNangvip">⬆️ Nâng Vip1→2</button>
+                    <button class="btn-sm-outline danger" id="btnDelete">🗑️ Xóa</button>
+                </div>
+
+                <!-- Replace: ô UDID mới -->
+                <div id="replaceSection">
+                    <label class="form-label" style="margin-top:14px">UDID mới (để replace)</label>
+                    <div class="input-row">
+                        <input id="udidNewInput" type="text" placeholder="UDID mới..." autocomplete="off"
+                            autocorrect="off" autocapitalize="none" spellcheck="false" />
+                        <button class="btn-icon" id="pasteNewBtn" title="Dán mới">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <rect x="8" y="4" width="13" height="17" rx="2" stroke="currentColor"
+                                    stroke-width="1.6" />
+                                <path d="M5 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1"
+                                    stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="btn-sm-outline" id="btnReplace" style="width:100%;margin-top:8px">🔄 Replace
+                        UDID</button>
+                </div>
+            </div>
+
+            <!-- Kết quả -->
+            <div id="resultBox" class="result-box" hidden></div>
+        </section>
+
+        <!-- ══ KHÁC ══ -->
+        <section class="page" id="page-more">
+            <div class="page-head">
+                <h2>Khác</h2>
+            </div>
+
+            <div class="list-cards">
+                <div class="list-card" data-action="myid">
+                    <div class="lc-icon" style="background:linear-gradient(135deg,#5b78d4,#7b93e8)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="4" y="5" width="16" height="14" rx="2.5" stroke="currentColor"
+                                stroke-width="1.6" />
+                            <path d="M8 10h3.5M8 14h8" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5>ID Telegram của tôi</h5>
+                        <p id="myidDisp">—</p>
+                    </div>
+                    <span class="lc-arr">copy</span>
+                </div>
+
+                <div class="list-card" data-action="myquota">
+                    <div class="lc-icon" style="background:linear-gradient(135deg,#3fbf96,#5b93d4)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+                            <path
+                                d="M12 7v1.5M12 15.5V17M9 10.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2.5-3 2.5-3 1.1-3 2.5S10.7 17.5 12 17.5s3-1.1 3-2.5"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5>Số dư & Quota</h5>
+                        <p id="quotaDisp">—</p>
+                    </div>
+                    <span class="lc-arr">›</span>
+                </div>
+
+                <div class="list-card" data-action="nap">
+                    <div class="lc-icon" style="background:linear-gradient(135deg,#e6c15a,#3fbf96)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="6" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6" />
+                            <path d="M2 10h20" stroke="currentColor" stroke-width="1.6" />
+                            <path d="M6 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5>Nạp tiền VND</h5>
+                        <p>Tạo QR chuyển khoản</p>
+                    </div>
+                    <span class="lc-arr">›</span>
+                </div>
+
+                <div class="list-card" data-action="napusdt">
+                    <div class="lc-icon" style="background:linear-gradient(135deg,#3fbf96,#7b93e8)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+                            <path d="M8.5 9.5h7M8.5 14.5h7M12 7v2M12 15v2" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5>Nạp USDT</h5>
+                        <p>Binance Gift Card</p>
+                    </div>
+                    <span class="lc-arr">›</span>
+                </div>
+
+                <div class="list-card" data-action="contact">
+                    <div class="lc-icon" style="background:linear-gradient(135deg,#a67ae0,#e87a9c)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4 3v-3H7.5A2.5 2.5 0 0 1 5 13.5v-7z"
+                                stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5>Liên hệ Admin</h5>
+                        <p>Hỗ trợ · Báo lỗi</p>
+                    </div>
+                    <span class="lc-arr">›</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ ADMIN ══ -->
+        <section class="page" id="page-admin">
+            <div class="page-head">
+                <h2>Admin</h2>
+            </div>
+
+            <div class="adm-section">Quản lý CTV</div>
+
+            <div class="adm-card">
+                <h4>Thêm CTV</h4>
+                <input type="number" id="adm_ctv_id" placeholder="Telegram ID" />
+                <input type="text" id="adm_ctv_name" placeholder="Tên CTV" />
+                <button class="btn-adm primary" data-act="addctv">✅ Thêm CTV</button>
+            </div>
+
+            <div class="adm-card">
+                <h4>Xóa CTV</h4>
+                <input type="number" id="adm_ctv_del" placeholder="Telegram ID" />
+                <button class="btn-adm danger" data-act="removectv">🗑️ Xóa CTV</button>
+            </div>
+
+            <div class="adm-card">
+                <h4>Nạp tiền cho CTV</h4>
+                <input type="number" id="adm_nap_id" placeholder="Telegram ID" />
+                <input type="number" id="adm_nap_amount" placeholder="Số tiền (VND)" />
+                <button class="btn-adm primary" data-act="nap_ctv">💰 Nạp tiền</button>
+            </div>
+
+            <div class="adm-section" style="margin-top:8px">Thông báo & Thống kê</div>
+
+            <div class="adm-card">
+                <h4>Broadcast cho CTV</h4>
+                <textarea id="adm_broadcast" rows="3" placeholder="Nội dung tin nhắn..."></textarea>
+                <button class="btn-adm primary" data-act="broadcast">📢 Gửi tất cả CTV</button>
+            </div>
+
+            <div class="adm-card">
+                <h4>Thống kê UDID</h4>
+                <p class="adm-desc">Xem tổng số UDID đang hoạt động trên hệ thống</p>
+                <button class="btn-adm ghost" data-act="thongke">📊 Xem thống kê</button>
+            </div>
+
+            <div class="adm-section" style="margin-top:8px">Cài đặt giá</div>
+
+            <div class="adm-card">
+                <h4>Đặt giá duyệt</h4>
+                <div class="adm-row">
+                    <input type="number" id="adm_price_v1" placeholder="Giá Vip1 (VND)" />
+                    <button class="btn-adm ghost" data-act="setprice_v1" style="white-space:nowrap">Set Vip1</button>
+                </div>
+                <div class="adm-row">
+                    <input type="number" id="adm_price_v2" placeholder="Giá Vip2 (VND)" />
+                    <button class="btn-adm ghost" data-act="setprice_v2" style="white-space:nowrap">Set Vip2</button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- RESULT MODAL -->
+    <div class="modal" id="modal" hidden>
+        <div class="modal-card">
+            <div class="modal-ico" id="modalIco">✅</div>
+            <h3 id="modalTitle">Thành công</h3>
+            <p id="modalBody"></p>
+            <button class="btn-approve vip1" id="modalClose">Đóng</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="loader" id="loader" hidden>
+        <div class="spinner"></div>
+    </div>
+
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>
