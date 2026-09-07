@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Đã Hủy - The Spike Cross</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --prism-1: rgba(239, 68, 68, 0.3);
+            --prism-2: rgba(248, 113, 113, 0.25);
+            --prism-3: rgba(252, 165, 165, 0.28);
+            --prism-4: rgba(239, 68, 68, 0.25);
+
+            --glass-bg: rgba(127, 29, 29, 0.4);
+            --glass-border: rgba(239, 68, 68, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --text-primary: rgba(254, 242, 242, 0.95);
+            --text-secondary: rgba(254, 202, 202, 0.8);
+            --cancel-color: #f87171;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            background: #450a0a;
+        }
+
+        .prism-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg,
+                    #450a0a 0%,
+                    #7f1d1d 50%,
+                    #991b1b 100%);
+        }
+
+        .prism-layer {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 20s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .prism-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--prism-1);
+            top: -80px;
+            left: -80px;
+            animation-duration: 25s;
+        }
+
+        .prism-2 {
+            width: 350px;
+            height: 350px;
+            background: var(--prism-2);
+            bottom: -60px;
+            right: -60px;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .prism-3 {
+            width: 320px;
+            height: 320px;
+            background: var(--prism-3);
+            top: 50%;
+            left: 50%;
+            animation-duration: 28s;
+            animation-delay: -10s;
+        }
+
+        .prism-4 {
+            width: 300px;
+            height: 300px;
+            background: var(--prism-4);
+            top: 25%;
+            right: 20%;
+            animation-duration: 32s;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(40px, -30px) scale(1.08);
+            }
+
+            66% {
+                transform: translate(-30px, 25px) scale(0.92);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 44px 36px;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: var(--glass-shadow),
+                inset 0 1px 0 rgba(239, 68, 68, 0.2);
+            animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .cancel-icon {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 28px;
+            background: var(--cancel-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+            box-shadow: 0 16px 48px rgba(239, 68, 68, 0.5);
+            position: relative;
+        }
+
+        .cancel-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: var(--cancel-color);
+            opacity: 0.2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .cancel-icon i {
+            font-size: 56px;
+            color: white;
+            position: relative;
+            z-index: 1;
+            animation: xmark 0.8s ease 0.4s backwards;
+        }
+
+        @keyframes xmark {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: rgba(127, 29, 29, 0.3);
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--cancel-color);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 28px 0;
+            backdrop-filter: blur(10px);
+            text-align: left;
+        }
+
+        .info-card h3 {
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 7px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .info-card li::before {
+            content: '•';
+            color: var(--cancel-color);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .timer {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(127, 29, 29, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .timer-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .timer-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--cancel-color);
+            color: white;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: rgba(127, 29, 29, 0.5);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 36px 28px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .cancel-icon {
+                width: 95px;
+                height: 95px;
+            }
+
+            .cancel-icon i {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="prism-bg">
+        <div class="prism-layer prism-1"></div>
+        <div class="prism-layer prism-2"></div>
+        <div class="prism-layer prism-3"></div>
+        <div class="prism-layer prism-4"></div>
+    </div>
+
+    <div class="container">
+        <div class="cancel-icon">
+            <i class="fas fa-times"></i>
+        </div>
+
+        <h1>Thanh Toán Đã Hủy</h1>
+        <p class="subtitle">
+            Giao dịch của bạn đã bị hủy.<br>
+            Không có khoản phí nào được thu.
+        </p>
+
+        <div class="info-card">
+            <h3>
+                <i class="fas fa-info-circle"></i>
+                Tại sao thanh toán bị hủy?
+            </h3>
+            <ul>
+                <li>Bạn đã chủ động hủy giao dịch</li>
+                <li>Phiên thanh toán hết hạn</li>
+                <li>Lỗi kết nối với ngân hàng</li>
+                <li>UDID đã được đăng ký trước đó</li>
+            </ul>
+        </div>
+
+        <div class="timer">
+            <div class="timer-text">Tự động chuyển về trang chủ sau:</div>
+            <div class="timer-value" id="countdown">10</div>
+        </div>
+
+        <div class="actions">
+            <a href="/" class="btn btn-primary">
+                🔄 Thử Lại
+            </a>
+            <a href="https://t.me/tiptipiosmod" class="btn btn-secondary">
+                💬 Hỗ Trợ
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let countdown = 10;
+        const countdownElement = document.getElementById('countdown');
+
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = '/';
+            }
+        }, 1000);
+
+        document.addEventListener('click', () => {
+            clearInterval(timer);
+            countdownElement.textContent = '⏸️';
+        });
+    </script>
+</body>
+
+</html>

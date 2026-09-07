@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duyệt UDID - The Spike Cross</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --prism-1: rgba(96, 165, 250, 0.25);
+            --prism-2: rgba(167, 139, 250, 0.2);
+            --prism-3: rgba(248, 113, 113, 0.15);
+            --prism-4: rgba(110, 231, 183, 0.2);
+            --prism-5: rgba(250, 204, 21, 0.15);
+
+            --glass-bg: rgba(30, 41, 59, 0.5);
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --text-primary: rgba(248, 250, 252, 0.95);
+            --text-secondary: rgba(203, 213, 225, 0.8);
+            --input-bg: rgba(51, 65, 85, 0.5);
+            --input-border: rgba(100, 116, 139, 0.3);
+            --btn-gradient-1: #60a5fa;
+            --btn-gradient-2: #a78bfa;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+            background: #0f172a;
+        }
+
+        .prism-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg,
+                    #1e293b 0%,
+                    #0f172a 25%,
+                    #1e1b4b 50%,
+                    #052e16 75%,
+                    #1e293b 100%);
+        }
+
+        .prism-layer {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            mix-blend-mode: normal;
+            animation: float 20s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .prism-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--prism-1);
+            top: -100px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .prism-2 {
+            width: 350px;
+            height: 350px;
+            background: var(--prism-2);
+            bottom: -80px;
+            right: -80px;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .prism-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--prism-3);
+            top: 40%;
+            left: 60%;
+            animation-duration: 35s;
+            animation-delay: -10s;
+        }
+
+        .prism-4 {
+            width: 320px;
+            height: 320px;
+            background: var(--prism-4);
+            top: 20%;
+            right: 15%;
+            animation-duration: 28s;
+            animation-delay: -15s;
+        }
+
+        .prism-5 {
+            width: 280px;
+            height: 280px;
+            background: var(--prism-5);
+            bottom: 25%;
+            left: 20%;
+            animation-duration: 32s;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(50px, -40px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-40px, 30px) scale(0.9);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 44px 36px;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: var(--glass-shadow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 14px;
+            display: block;
+            animation: float-icon 3s ease-in-out infinite;
+            box-shadow: 0 8px 24px rgba(96, 165, 250, 0.5),
+                0 0 0 4px rgba(96, 165, 250, 0.2);
+            border: 3px solid rgba(248, 250, 252, 0.2);
+            object-fit: cover;
+        }
+
+        @keyframes float-icon {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-12px) scale(1.05);
+            }
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--btn-gradient-1), var(--btn-gradient-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 28px 0 24px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    var(--input-border),
+                    transparent);
+        }
+
+        .divider span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 16px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            border-radius: 14px;
+            font-size: 15px;
+            color: var(--text-primary);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            font-family: 'SF Mono', 'Consolas', monospace;
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--btn-gradient-1);
+            background: rgba(51, 65, 85, 0.7);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15),
+                0 4px 12px rgba(96, 165, 250, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .package-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .package-option {
+            position: relative;
+        }
+
+        .package-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .package-option label {
+            display: block;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 18px;
+            padding: 22px 14px;
+            text-align: center;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-option label::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--btn-gradient-1), var(--btn-gradient-2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .package-option input[type="radio"]:checked+label::before {
+            opacity: 0.15;
+        }
+
+        .package-option input[type="radio"]:checked+label {
+            border-color: var(--btn-gradient-1);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 12px 24px rgba(96, 165, 250, 0.3);
+        }
+
+        .package-name {
+            font-size: 26px;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .package-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 17px;
+            background: linear-gradient(135deg, var(--btn-gradient-1), var(--btn-gradient-2));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(96, 165, 250, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(96, 165, 250, 0.5);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-box {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-left: 3px solid var(--btn-gradient-1);
+            border-radius: 14px;
+            padding: 15px;
+            margin-top: 22px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .info-box strong {
+            color: var(--text-primary);
+        }
+
+        .error {
+            border-left-color: #f87171;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(96, 165, 250, 0.2);
+            border-top-color: var(--btn-gradient-1);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 36px 28px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .package-select {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="prism-bg">
+        <div class="prism-layer prism-1"></div>
+        <div class="prism-layer prism-2"></div>
+        <div class="prism-layer prism-3"></div>
+        <div class="prism-layer prism-4"></div>
+        <div class="prism-layer prism-5"></div>
+    </div>
+
+    <div class="container">
+        <div class="logo">
+            <img src="https://bio.linkcdn.cc/upload/2024040505/171229360600038148.jpg" alt="The Spike Cross"
+                class="logo-avatar">
+            <h1>The Spike Cross</h1>
+            <p class="subtitle">Duyệt UDID Tự Động</p>
+        </div>
+
+        <div class="divider"><span>Thông Tin</span></div>
+
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="udid">📱 Nhập UDID/UUID</label>
+                <input type="text" id="udid" name="udid" placeholder="00008020-000D2D081A92002E" required>
+            </div>
+
+            <div class="form-group">
+                <label>🎁 Chọn Gói</label>
+                <div class="package-select">
+                    <div class="package-option">
+                        <input type="radio" id="vip1" name="package" value="vip1" checked>
+                        <label for="vip1">
+                            <div class="package-name">👤</div>
+                            <div class="package-price">Vip1</div>
+                            <div class="package-price">50,000đ</div>
+                        </label>
+                    </div>
+                    <div class="package-option">
+                        <input type="radio" id="vip2" name="package" value="vip2">
+                        <label for="vip2">
+                            <div class="package-name">🔥</div>
+                            <div class="package-price">Vip2</div>
+                            <div class="package-price">80,000đ</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                💳 Thanh Toán Ngay
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: var(--text-secondary);">Đang tạo thanh toán...</p>
+        </div>
+
+        <div class="info-box" id="infoBox">
+            <strong>ℹ️ Lưu ý:</strong><br>
+            • UDID sẽ được duyệt tự động sau khi thanh toán<br>
+            • Thời hạn: 31-32 ngày<br>
+            • Hỗ trợ: @tiptipiosmod
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://your-api-domain.com/api';
+
+        function isValidUDID(udid) {
+            const patterns = [
+                /^[A-F0-9]{40}$/i,
+                /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
+                /^[0-9A-F]{8}-[0-9A-F]{16}$/i
+            ];
+            return patterns.some(pattern => pattern.test(udid.trim()));
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const udid = document.getElementById('udid').value.trim().toUpperCase();
+            const packageType = document.querySelector('input[name="package"]:checked').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const infoBox = document.getElementById('infoBox');
+
+            infoBox.classList.remove('error');
+            infoBox.innerHTML = `
+                <strong>ℹ️ Lưu ý:</strong><br>
+                • UDID sẽ được duyệt tự động sau khi thanh toán<br>
+                • Thời hạn: 31 ngày<br>
+                • Hỗ trợ: @tiptipiosmod
+            `;
+
+            if (!isValidUDID(udid)) {
+                infoBox.classList.add('error');
+                infoBox.innerHTML = '<strong>❌ UDID không hợp lệ!</strong><br>Vui lòng kiểm tra lại.';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            loading.classList.add('show');
+
+            try {
+                const response = await fetch(`${API_URL}/create-payment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ udid, package: packageType })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.paymentUrl) {
+                    localStorage.setItem('selectedPackage', packageType);
+                    window.location.href = data.paymentUrl;
+                } else {
+                    throw new Error(data.message || 'Không thể tạo thanh toán');
+                }
+            } catch (error) {
+                infoBox.classList.add('error');
+                infoBox.innerHTML = `<strong>❌ Lỗi:</strong> ${error.message}`;
+                submitBtn.disabled = false;
+                loading.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+
+</html>
